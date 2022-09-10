@@ -1,22 +1,45 @@
 # LambdaCraft
-LambdaCraft is a macro-based Common Lisp DSL for building untyped lambda calculus terms.
-It is used to build [LambdaLisp](https://github.com/woodrush/lambdalisp), a Lisp interpreter written in untyped lambda calculus.
+LambdaCraft is a Common Lisp DSL for building untyped lambda calculus terms in a macro-based style.
+It is inspired by Ben Rudiak-Gould's Scheme program Lazier, a compiler from lambda terms written in Scheme to [Lazy K](https://tromp.github.io/cl/lazy-k.html).
+LambdaCraft is used to build [LambdaLisp](https://github.com/woodrush/lambdalisp), a Lisp interpreter written in untyped lambda calculus.
 
-A primary use of LambdaCraft is to write programs for lambda-calculus-based programming languages such as
-[Binary Lambda Calculus](https://tromp.github.io/cl/cl.html) and
-[Universal Lambda](http://www.golfscript.com/lam/).
-These languages accept a lambda calculus term as a program.
+## Example
+```sh
+(load "./lambdacraft.cl")
+
+(defrec-lazy fact (n)
+  (if (<= n 0)
+    1
+    (* n (fact (- n 1)))))
+
+(format t (compile-to-plaintext-lambda-lazy fact))
+```
+
+will print
+
+```
+(λx.(λy.(x (y y)) λy.(x (y y))) λx.λy.((((((λz.λa.a λy.λa.λb.(((y λc.λd.(d (c a))) λc.b) λc.c)) y) λz.λz.λb.b) λz.λa.z) λz.λa.(z a)) λz.λa.((y ((x ((λz.λa.(z a) y.λz.λa.(((y λe.λf.(f (e z))) λe.a) λe.e)) y)) z)) a)))
+```
+
+Which is a lambda calculus term that takes a [Church-encoded](https://en.wikipedia.org/wiki/Church_encoding) number and return its factorial.
+The source code is available as [example.cl](./example.cl).
+
+
+## Usage for Lambda-Based Programming Languages
+LambdaCraft supports the following lambda-calculus-based and SKI-combinator-based languages:
+
+- [Binary Lambda Calculus](https://tromp.github.io/cl/cl.html)
+- [Universal Lambda](http://www.golfscript.com/lam/)
+- [Lazy K](https://tromp.github.io/cl/lazy-k.html)
+
+These languages accept a lambda calculus term or a [SKI combinator calculus](https://en.wikipedia.org/wiki/SKI_combinator_calculus) as a program.
 Using a stream-based I/O with strings encoded in the [Mogensen-Scott encoding](https://en.wikipedia.org/wiki/Mogensen%E2%80%93Scott_encoding),
 these languages are able to handle lambda terms as a function that takes a string and outputs a string,
 where each string represents the standard input and output.
 
-LambdaCraft can also compile the built lambda term into [SKI combinator calculus](https://en.wikipedia.org/wiki/SKI_combinator_calculus) terms.
-With this feature, it can be used to write programs for [Lazy K](https://tromp.github.io/cl/lazy-k.html),
-an SKI-combinator-based programming language with the same I/O strategy.
-
 Since LambdaCraft is designed independently from these languages,
-it can be used to simply build a general-purpose lambda calculus term.
-For example, [example.cl](example.cl) implements the factorial function in lambda calculus.
+it can be used to simply build a general-purpose lambda calculus term as shown in the previous factorial function example.
+
 
 ## Supported Output Formats
 LambdaCraft can compile lambda terms into the following formats:
@@ -30,7 +53,7 @@ LambdaCraft can compile lambda terms into the following formats:
 | SKI combinator calculus term                                                                          | `(SKK)`                      | `compile-to-ski-parens-lazy`       |
 | JavaScript function                                                                                   | `function (x) { return x; }` | `compile-to-js-lazy`               |
 | JavaScript function in arrow notation                                                                 | `(x) => x`                   | `compile-to-js-arrow-lazy`         |
-| Python lambda                                                                                         | `lambda x: x`                | `compile-to-python-lambda-lazy`    |
+| Python lambda                                                                                         | `lambda x: x`                | `compile-to-python-lazy`           |
 
 
 ## Usage
@@ -55,3 +78,6 @@ sbcl --script example.cl
 ```
 
 which will print the factorial function defined in the script.
+
+LambdaCraft also runs on [LambdaLisp](https://github.com/woodrush/lambdalisp) as well, since it is written as a
+Common-Lisp-LambdaLisp polyglot program. Practically, running it on Common Lisp is faster.
