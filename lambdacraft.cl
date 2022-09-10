@@ -337,7 +337,7 @@
         ((eq expr 'K-comb**) "K")
         ((eq expr 'I-comb**) "I")
         (t (decorate-varname expr)))
-      (concatenate `string "(" (flatten-ski (car expr)) (flatten-ski (car (cdr expr))) ")")))
+      (concatenate `string "(" (rewrite-ski (car expr)) (rewrite-ski (car (cdr expr))) ")")))
 
 (defun compile-to-ski-parens (expr)
   (rewrite-ski (t-rewrite (curry expr))))
@@ -420,7 +420,7 @@
 (defmacro compile-to-ski-lazy (expr-lazy)
   `(compile-to-ski (macroexpand-lazy ,expr-lazy)))
 
-(defun compile-to-ski-parens-lazy (expr)
+(defmacro compile-to-ski-parens-lazy (expr-lazy)
   `(compile-to-ski-parens (macroexpand-lazy ,expr-lazy)))
 
 (defmacro compile-to-js-lazy (expr-lazy)
@@ -436,4 +436,11 @@
   `(compile-to-plaintext-lambda (macroexpand-lazy ,expr-lazy)))
 
 (defmacro compile-to-lisp-lazy (expr-lazy)
-  `(macroexpand-lazy ,expr-lazy))
+  `(progn
+    (setq *print-pretty* nil)
+    (write-to-string (macroexpand-lazy ,expr-lazy))))
+
+(defmacro compile-to-lisp-pretty-lazy (expr-lazy)
+  `(progn
+    (setq *print-pretty* t)
+    (write-to-string (macroexpand-lazy ,expr-lazy))))
