@@ -414,6 +414,9 @@
 ;;================================================================
 ;; Utilities
 ;;================================================================
+(defmacro compile-to-plaintext-lambda-lazy (expr-lazy)
+  `(compile-to-plaintext-lambda (macroexpand-lazy ,expr-lazy)))
+
 (defmacro compile-to-blc-lazy (expr-lazy)
   `(compile-to-blc (macroexpand-lazy ,expr-lazy)))
 
@@ -431,9 +434,6 @@
 
 (defmacro compile-to-python-lazy (expr-lazy)
   `(compile-to-python (macroexpand-lazy ,expr-lazy)))
-
-(defmacro compile-to-plaintext-lambda-lazy (expr-lazy)
-  `(compile-to-plaintext-lambda (macroexpand-lazy ,expr-lazy)))
 
 (defmacro compile-to-lisp-lazy (expr-lazy)
   `(progn
