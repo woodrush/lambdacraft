@@ -21,8 +21,8 @@ will print
 (λx.(λy.(x (y y)) λy.(x (y y))) λx.λy.((((((λz.λa.a λy.λa.λb.(((y λc.λd.(d (c a))) λc.b) λc.c)) y) λz.λz.λb.b) λz.λa.z) λz.λa.(z a)) λz.λa.((y ((x ((λz.λa.(z a) y.λz.λa.(((y λe.λf.(f (e z))) λe.a) λe.e)) y)) z)) a)))
 ```
 
-Which is a lambda calculus term that takes a [Church-encoded](https://en.wikipedia.org/wiki/Church_encoding) number and return its factorial.
-Here, `defrec-lazy` is a LambdaCraft macro that makes use of the [Y combinator](https://en.wikipedia.org/wiki/Fixed-point_combinator) for self-recursion.
+Which is a lambda calculus term that takes a [Church-encoded](https://en.wikipedia.org/wiki/Church_encoding) number and returns its factorial.
+Here, `defrec-lazy` is a LambdaCraft macro that uses the [Y combinator](https://en.wikipedia.org/wiki/Fixed-point_combinator) for self-recursion.
 The source code is available as [example.cl](./example.cl).
 
 
@@ -33,7 +33,7 @@ LambdaCraft supports the following lambda-calculus-based and SKI-combinator-base
 - [Universal Lambda](http://www.golfscript.com/lam/)
 - [Lazy K](https://tromp.github.io/cl/lazy-k.html)
 
-These languages accept a lambda calculus term or a [SKI combinator calculus](https://en.wikipedia.org/wiki/SKI_combinator_calculus) as a program.
+These languages accept a lambda calculus term or a [SKI combinator calculus](https://en.wikipedia.org/wiki/SKI_combinator_calculus) term as a program.
 Using a stream-based I/O with strings encoded in the [Mogensen-Scott encoding](https://en.wikipedia.org/wiki/Mogensen%E2%80%93Scott_encoding),
 these languages are able to handle lambda terms as a function that takes a string and outputs a string,
 where each string represents the standard input and output.
@@ -42,7 +42,7 @@ where each string represents the standard input and output.
 The outputs of `examples/*.cl` can be run on each language as:
 ```sh
 sbcl --script ./examples/blc.cl | asc2bin | tromp        # Binary Lambda Calculus
-sbcl --script ./examples/ulamb.cl | asc2bin | clamb -u   # Universla Lambda
+sbcl --script ./examples/ulamb.cl | asc2bin | clamb -u   # Universal Lambda
 lazyk <(sbcl --script ./examples/lazyk.cl) -u            # Lazy K
 ```
 
@@ -56,9 +56,10 @@ LambdaCraft can compile lambda terms into the following formats:
 |------------------------------------------------------------------------------------------------------ |------------------------------|------------------------------------|
 | Plaintext lambda notation                                                                             | `λx.x`                       | `compile-to-plaintext-lambda-lazy` |
 | Lisp S-expression                                                                                     | `(lambda (x) x)`             | `compile-to-lisp-lazy`             |
+| Lisp S-expression, pretty-printed                                                                     | `(lambda (x) x)`             | `compile-to-lisp-pretty-lazy`      |
 | [Binary lambda calculus](https://tromp.github.io/cl/cl.html) notation                                 | `0010`                       | `compile-to-blc-lazy`              |
 | SKI combinator calculus term in [Unlambda](http://www.madore.org/~david/programs/unlambda/) notation  | ``` ``skk```                 | `compile-to-ski-lazy`              |
-| SKI combinator calculus term                                                                          | `(SKK)`                      | `compile-to-ski-parens-lazy`       |
+| SKI combinator calculus term                                                                          | `((SK)K)`                    | `compile-to-ski-parens-lazy`       |
 | JavaScript function                                                                                   | `function (x) { return x; }` | `compile-to-js-lazy`               |
 | JavaScript function in arrow notation                                                                 | `(x) => x`                   | `compile-to-js-arrow-lazy`         |
 | Python lambda                                                                                         | `lambda x: x`                | `compile-to-python-lazy`           |
@@ -89,31 +90,3 @@ which will print the factorial function defined in the script.
 
 LambdaCraft also runs on [LambdaLisp](https://github.com/woodrush/lambdalisp) as well, since it is written as a
 Common-Lisp-LambdaLisp polyglot program. Practically, running it on Common Lisp is faster.
-
-
-## Lazy K Programming Tips
-In Lazy K, the interpreter applies the standard input to the program when the program is run.
-Therefore, a program that does not use the standard input must be written as a function that takes the standard input as well.
-
-For example, in [examples/lazyk.cl](examples/lazyk.cl), if we write
-
-```lisp
-(def-lazy main (cons "A" (inflist 256)))
-```
-
-Then, the Lazy K interpreter will apply the standard input to `(cons "A" (inflist 256))`, meaning that it will evaluate
-
-```lisp
-((cons "A" (inflist 256)) stdin)
-```
-
-where `stdin` is a null string or some string.
-This will evaluate to something else than `(cons "A" (inflist 256))`, which means that the program will not print `A`.
-To let the program print `A`, we must write
-
-```lisp
-(defun-lazy main (stdin)
-  (cons "A" (inflist 256)))
-```
-
-so that `stdin` is not applied to `(cons "A" (inflist 256))`, therefore letting the program reduce to `(cons "A" (inflist 256))`.
