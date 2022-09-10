@@ -22,6 +22,7 @@ will print
 ```
 
 Which is a lambda calculus term that takes a [Church-encoded](https://en.wikipedia.org/wiki/Church_encoding) number and return its factorial.
+Here, `defrec-lazy` is a LambdaCraft macro that makes use of the [Y combinator](https://en.wikipedia.org/wiki/Fixed-point_combinator) for self-recursion.
 The source code is available as [example.cl](./example.cl).
 
 
@@ -37,8 +38,15 @@ Using a stream-based I/O with strings encoded in the [Mogensen-Scott encoding](h
 these languages are able to handle lambda terms as a function that takes a string and outputs a string,
 where each string represents the standard input and output.
 
-Since LambdaCraft is designed independently from these languages,
-it can be used to simply build a general-purpose lambda calculus term as shown in the previous factorial function example.
+`examples/*.cl` are sample scripts for these languages, which compiles to a program that prints the letter `A` and exits.
+The outputs of `examples/*.cl` can be run on each language as:
+```sh
+sbcl --script ./examples/blc.cl | asc2bin | tromp        # Binary Lambda Calculus
+sbcl --script ./examples/ulamb.cl | asc2bin | clamb -u   # Universla Lambda
+lazyk <(sbcl --script ./examples/lazyk.cl) -u            # Lazy K
+```
+
+Instructions for building the interpreters for these languages are described in detail in my other project, [LambdaLisp](https://github.com/woodrush/lambdalisp).
 
 
 ## Supported Output Formats
@@ -81,3 +89,31 @@ which will print the factorial function defined in the script.
 
 LambdaCraft also runs on [LambdaLisp](https://github.com/woodrush/lambdalisp) as well, since it is written as a
 Common-Lisp-LambdaLisp polyglot program. Practically, running it on Common Lisp is faster.
+
+
+## Lazy K Programming Tips
+In Lazy K, the interpreter applies the standard input to the program when the program is run.
+Therefore, a program that does not use the standard input must be written as a function that takes the standard input as well.
+
+For example, in [examples/lazyk.cl](examples/lazyk.cl), if we write
+
+```lisp
+(def-lazy main (cons "A" (inflist 256)))
+```
+
+Then, the Lazy K interpreter will apply the standard input to `(cons "A" (inflist 256))`, meaning that it will evaluate
+
+```lisp
+((cons "A" (inflist 256)) stdin)
+```
+
+where `stdin` is a null string or some string.
+This will evaluate to something else than `(cons "A" (inflist 256))`, which means that the program will not print `A`.
+To let the program print `A`, we must write
+
+```lisp
+(defun-lazy main (stdin)
+  (cons "A" (inflist 256)))
+```
+
+so that `stdin` is not applied to `(cons "A" (inflist 256))`, therefore letting the program reduce to `(cons "A" (inflist 256))`.
