@@ -27,7 +27,7 @@ Here, `defrec-lazy` is a LambdaCraft macro that uses the [Y combinator](https://
 The source code is available as [example.cl](./example.cl).
 
 
-## Usage for Lambda-Based Programming Languages
+## Usage for Lambda-Calculus-Based Programming Languages
 LambdaCraft supports the following lambda-calculus-based and SKI-combinator-based languages:
 
 - [Binary Lambda Calculus](https://tromp.github.io/cl/cl.html)
@@ -91,3 +91,11 @@ which will print the factorial function defined in the script.
 
 LambdaCraft also runs on [LambdaLisp](https://github.com/woodrush/lambdalisp) as well, since it is written as a
 Common-Lisp-LambdaLisp polyglot program. Practically, running it on Common Lisp is faster.
+
+
+## Testing
+The test runs `make test`, which does the following:
+
+- Runs [./examples/ulamb.cl](./examples/ulamb.cl) with SBCL, and saves the output as `a.ulamb`
+- Builds [clamb](https://github.com/irori/clamb), a [Universal Lambda](http://www.golfscript.com/lam/) interpreter written by Kunihiko Sakamoto ([@irori](https://github.com/irori/))
+- Runs `a.ulamb` on `clamb` and confirms that it prints the letter `A`
