@@ -1,4 +1,5 @@
-# LambdaCraft
+![LambdaCraftLisp's logo](./bin/lambdacraft_logo.png)
+
 LambdaCraft is a Common Lisp DSL for building untyped lambda calculus terms in a macro-based style.
 It is inspired by Ben Rudiak-Gould's Scheme program Lazier, a compiler from lambda terms written in Scheme to [Lazy K](https://tromp.github.io/cl/lazy-k.html).
 LambdaCraft is used to build [LambdaLisp](https://github.com/woodrush/lambdalisp), a Lisp interpreter written in untyped lambda calculus.
