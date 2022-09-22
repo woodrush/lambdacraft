@@ -57,12 +57,13 @@ LambdaCraft can compile lambda terms into the following formats:
 
 | Format                                                                                                | Example                      | API                                |
 |------------------------------------------------------------------------------------------------------ |------------------------------|------------------------------------|
-| Plaintext lambda notation                                                                             | `λx.x`                       | `compile-to-plaintext-lambda-lazy` |
-| Lisp S-expression                                                                                     | `(lambda (x) x)`             | `compile-to-lisp-lazy`             |
-| Lisp S-expression, pretty-printed                                                                     | `(lambda (x) x)`             | `compile-to-lisp-pretty-lazy`      |
+| Plaintext lambda notation                                                                             | `\x.x`                       | `compile-to-plaintext-lambda-lazy` |
 | [Binary lambda calculus](https://tromp.github.io/cl/cl.html) notation                                 | `0010`                       | `compile-to-blc-lazy`              |
 | SKI combinator calculus term in [Unlambda](http://www.madore.org/~david/programs/unlambda/) notation  | ``` ``skk```                 | `compile-to-ski-lazy`              |
 | SKI combinator calculus term                                                                          | `((SK)K)`                    | `compile-to-ski-parens-lazy`       |
+| Plaintext lambda compatible with [https://github.com/tromp/AIT](https://github.com/tromp/AIT)         | `(\x.x)`                     | `compile-to-lam-lazy`              |
+| Lisp S-expression                                                                                     | `(lambda (x) x)`             | `compile-to-lisp-lazy`             |
+| Lisp S-expression, pretty-printed                                                                     | `(lambda (x) x)`             | `compile-to-lisp-pretty-lazy`      |
 | JavaScript function                                                                                   | `function (x) { return x; }` | `compile-to-js-lazy`               |
 | JavaScript function in arrow notation                                                                 | `(x) => x`                   | `compile-to-js-arrow-lazy`         |
 | Python lambda                                                                                         | `lambda x: x`                | `compile-to-python-lazy`           |

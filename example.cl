@@ -8,6 +8,7 @@
 (format t "~a~%~%" (compile-to-lisp-pretty-lazy fact))
 (format t "~a~%~%" (compile-to-lisp-lazy fact))
 (format t "~a~%~%" (compile-to-plaintext-lambda-lazy fact))
+(format t "~a~%~%" (compile-to-lam-lazy fact))
 (format t "~a~%~%" (compile-to-blc-lazy fact))
 (format t "~a~%~%" (compile-to-ski-lazy fact))
 (format t "~a~%~%" (compile-to-ski-parens-lazy fact))
