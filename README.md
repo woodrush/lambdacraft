@@ -4,7 +4,17 @@
 
 LambdaCraft is a Common Lisp DSL for building untyped lambda calculus terms in a macro-based style.
 It is inspired by Ben Rudiak-Gould's Scheme program Lazier, a compiler from lambda terms written in Scheme to [Lazy K](https://tromp.github.io/cl/lazy-k.html).
+
 LambdaCraft is used to build [LambdaLisp](https://github.com/woodrush/lambdalisp), a Lisp interpreter written in untyped lambda calculus.
+It can be used to write large programs in the following lambda-calculus-based languages:
+
+- [Binary Lambda Calculus](https://tromp.github.io/cl/cl.html)
+- [Universal Lambda](http://www.golfscript.com/lam/)
+- [Lazy K](https://tromp.github.io/cl/lazy-k.html)
+
+LambdaCraft can also be used to build general-purpose generic lambda terms for educational purposes as well.
+Many output formats shown in the [supported output formats](#supported-output-formats) section are supported.
+
 
 ## Example
 ```sh
